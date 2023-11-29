@@ -202,11 +202,33 @@ class OrderController extends Controller
             ]);
 
             $msg = [
-                'cetakinvoice' => view('pages.transaksi.order.cetak_invoice', $data)->render(),
+                'cetakinvoice' => url('/backsite/order/cetak_invoice/' . $data->invoice),
                 'sukses' => 'Transaksi berhasil disimpan',
             ];
 
             return response()->json($msg);
+        }
+    }
+
+    public function cetak_invoice($no_invoice)
+    {
+        $order = Order::where('invoice', $no_invoice)->first();
+        $order_detail = OrderDetail::where('invoice_id', $order->invoice)->get();
+
+        if ($order != null) {
+            $data = [
+                'no_invoice' => $no_invoice,
+                'tanggal' => $order->tgl_invoice,
+                'customer' => $order->customer,
+                'detail_order' => $order_detail,
+                'total_harga' => $order->total_harga,
+                'jumlah_uang' => $order->jumlah_uang,
+                'sisa_uang' => $order->sisa_uang
+            ];
+
+            return view('pages.transaksi.order.cetak_invoice', $data);
+        } else {
+            return redirect()->route('backsite.order.index');
         }
     }
 }

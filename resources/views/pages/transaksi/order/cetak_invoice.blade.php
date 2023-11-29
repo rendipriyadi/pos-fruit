@@ -19,7 +19,67 @@
         </tr>
         <tr style="text-align: left;">
             <td>Invoice :</td>
-            <td>{{ $invoice }}</td>
+            <td>{{ $no_invoice }}</td>
+        </tr>
+        <tr style="text-align: left;">
+            <td>Tanggal :</td>
+            <td>{{ date('d-m-Y', strtotime($tanggal)) }}</td>
+        </tr>
+        <tr style="text-align: left;">
+            <td>Customer :</td>
+            <td>{{ $customer }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr style="border: none; border-top: 1px dashed #000;">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table style="width: 100%; text-align:left; font-size:10pt;">
+                    @foreach ($detail_order as $order)
+                        <tr>
+                            <td colspan="3">{{ $order->item_buah->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ number_format($order->qty, 0, ',', '.') . '' . $order->item_buah->unit }}</td>
+                            <td style="text-align: right;">{{ number_format($order->item_buah->harga, 0, ',', '.') }}
+                            </td>
+                            <td style="text-align: right;">{{ number_format($order->total, 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td colspan="3">
+                            <hr style="border: none; border-top: 1px dashed #000;">
+                        </td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td></td>
+                        <td>Total Harga :</td>
+                        <td>{{ number_format($total_harga, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td></td>
+                        <td>Jumlah Uang :</td>
+                        <td>{{ number_format($jumlah_uang, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr style="text-align: right;">
+                        <td></td>
+                        <td>Sisa Uang :</td>
+                        <td>{{ number_format($sisa_uang, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <hr style="border: none; border-top: 1px dashed #000;">
+                        </td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td colspan="3">
+                            Terimakasih Atas Kunjungan Anda
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
 </body>

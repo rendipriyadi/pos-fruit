@@ -67,6 +67,7 @@ Route::group(['prefix' => 'backsite', 'as' => 'backsite.', 'middleware' => ['aut
         Route::post('/order/clear_cart/{id}', 'clear_cart')->name('order.clear_cart');
         Route::get('/order/payment', 'payment')->name('order.payment');
         Route::post('/order/save_payment', 'save_payment')->name('order.save_payment');
+        Route::get('/order/cetak_invoice/{no_invoice}', 'cetak_invoice')->name('order.cetak_invoice');
     });
     // riwayat transaksi
     Route::resource('riwayat_transaksi', HistoryOrderController::class);
