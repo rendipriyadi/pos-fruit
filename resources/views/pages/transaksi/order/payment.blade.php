@@ -74,55 +74,70 @@
     });
 
     $('.frmpembayaran').submit(function(e) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        e.preventDefault();
-        $.ajax({
-            type: "post",
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            dataType: "json",
-            beforeSend: function() {
-                $('.btnSimpan').html('<i class="fa fa-spin fa-spinner"></i>');
-                $('.btnSimpan').prop('disabled', true);
-            },
-            complete: function() {
-                $('.btnSimpan').html('Simpan');
-                $('.btnSimpan').prop('disabled', false);
-            },
-            success: function(response) {
-                if (response.sukses) {
-                    Swal.fire({
-                        title: 'Cetak Invoice',
-                        text: response.sukses + ",cetak invoice ?",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Cetak !',
-                        cancelButtonText: 'Tidak'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            let windowCetak = window.open(response.cetakinvoice,
-                                "Cetak Invoice", "width=400,height=400");
+        // validasi inputan jumlah uang
+        let totalbayar = $('#totalbayar').autoNumeric('get');
+        let jumlahuang = $('#jumlahuang').autoNumeric('get');
+        if (parseInt(jumlahuang) < parseInt(totalbayar)) {
+            Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Nominal jumlah uang kurang dari total bayar!",
+                showConfirmButton: false,
+                timer: 1500
+            });
 
-                            windowCetak.focus();
-                            window.location.reload();
-                        } else {
-                            window.location.reload();
-                        }
-                    });
+            return false;
+        } else {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
+            });
+            e.preventDefault();
+            $.ajax({
+                type: "post",
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: "json",
+                beforeSend: function() {
+                    $('.btnSimpan').html('<i class="fa fa-spin fa-spinner"></i>');
+                    $('.btnSimpan').prop('disabled', true);
+                },
+                complete: function() {
+                    $('.btnSimpan').html('Simpan');
+                    $('.btnSimpan').prop('disabled', false);
+                },
+                success: function(response) {
+                    if (response.sukses) {
+                        Swal.fire({
+                            title: 'Cetak Invoice',
+                            text: response.sukses + ",cetak invoice ?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Cetak !',
+                            cancelButtonText: 'Tidak'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                let windowCetak = window.open(response.cetakinvoice,
+                                    "Cetak Invoice", "width=400,height=400");
 
-        });
+                                windowCetak.focus();
+                                window.location.reload();
+                            } else {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
 
-        return false;
+            });
+
+            return false;
+        }
     });
 </script>
